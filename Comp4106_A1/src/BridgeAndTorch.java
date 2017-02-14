@@ -3,13 +3,15 @@ import java.util.*;
 
 public class BridgeAndTorch {
 	public BTNode start;
+	public static int[] times;
+	public int successTime;
 	
 	public BridgeAndTorch(int size){
 		start = new BTNode(size);
+		times = new int[size - 1];
 	}
 	public BTNode depthFirstSearch(){
 		Stack<BTNode> s = new Stack<BTNode>();
-		//start.getMoves();
 		for(ArrayList<Integer> a: start.getMoves()){
 			s.push(new BTNode(a,start));
 		}
@@ -55,18 +57,64 @@ public class BridgeAndTorch {
 		return path;
 	}
 	
-	public void printSuccessRoute(ArrayList<BTNode> path){
-		for(BTNode b: path){
-			System.out.println(b.getState().toString());
+	public void printSuccessRoute(BTNode end){
+		ArrayList<ArrayList<Integer>> changed = new ArrayList<>();
+		successTime = 0;
+		
+		while(end.getParent()!=null){
+			ArrayList<Integer> temp = BTNode.getChangedIndices(end.getState(), end.getParent().getState());
+			changed.add(0, temp);
+			end = end.getParent();
+		}
+		for(ArrayList<Integer> i: changed){
+			//use max();
+			System.out.print("Person(s) ");
+			for(Integer a: i){
+				if(a.intValue() != 0){
+					System.out.print(a + " ");
+				}
+			}
+			System.out.println("crossed the bridge.");
 		}
 	}
-	
+	public static void setTimes(String[] input){
+		for(int i = 0;i<input.length;i++){
+			times[i] = Integer.parseInt(input[i]);
+		}
+	}
+	public int getSuccessTime(){
+		return successTime;
+	}
 	public static void main(String[] args) {
-		BridgeAndTorch bt = new BridgeAndTorch(5);
+		System.out.println("Please enter the number of people (Minimum 3)");
+		Scanner scan = new Scanner(System.in);
+		String input = scan.nextLine();
+		while(Integer.parseInt(input) < 3){
+			System.out.println("Please enter a value greater than 3");
+			input = scan.nextLine();
+		}
+		int size = Integer.parseInt(input) + 1;
+		BridgeAndTorch bt = new BridgeAndTorch(size);
+		
+		System.out.println("Now enter the corresponding times (Separated by one space)");
+		input = scan.nextLine();
+		String[] nums = input.split(" ");
+		
+		while(nums.length!= size - 1){
+			System.out.println("Make sure each person has a crossing time (No extra times)");
+			input = scan.nextLine();
+			nums = input.split(" ");
+		}
+		
+		setTimes(nums);
+		
 		BTNode f = bt.depthFirstSearch();
-		bt.printSuccessRoute(getSuccessRoute(f));
-		System.out.println();
+		System.out.println("DFS");
+		bt.printSuccessRoute(f);
+		System.out.println("Success Time: " + bt.getSuccessTime());
 		BTNode g = bt.breadthFirstSearch();
-		bt.printSuccessRoute(getSuccessRoute(g));
+		System.out.println("BFS");
+		bt.printSuccessRoute(g);
+		System.out.println("Success Time: " + bt.getSuccessTime());
 	}
 }
