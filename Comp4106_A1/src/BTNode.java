@@ -3,7 +3,7 @@ import java.util.ArrayList;
 public class BTNode {
 	private ArrayList<Integer> state;
 	private BTNode parent;
-	private ArrayList<BTNode> children;
+
 	private ArrayList<ArrayList<Integer>> moves;
 	public static ArrayList<Integer> goal;
 	private static int size;
@@ -11,19 +11,17 @@ public class BTNode {
 	public BTNode(int size){
 		this.size = size;
 		this.generateStart();
-		children = new ArrayList<BTNode>();
 		generateGoal();
 	}
 	public BTNode(ArrayList<Integer> info,BTNode parent){
 		state = new ArrayList<Integer>();
 		state.addAll(info);
 		this.parent = parent;
-		children = new ArrayList<BTNode>();
 		size = state.size();
 		generateGoal();
 	}
 	
-	public void getPossibleMoves(){
+	public ArrayList<ArrayList<Integer>> getMoves(){
 		ArrayList<Integer> temp = new ArrayList<Integer>();
 		temp.addAll(state);
 		moves = new ArrayList<ArrayList<Integer>>();
@@ -56,6 +54,7 @@ public class BTNode {
 				}
 			}while(!compareArrays(temp,state));
 		}
+		return moves;
 	}
 	
 	public static boolean compareArrays(ArrayList<Integer> arr1, ArrayList<Integer> arr2){
@@ -119,37 +118,19 @@ public class BTNode {
 			goal.add(1);
 		}
 	}
-	public ArrayList<ArrayList<Integer>> getMoves(){
-		return moves;
-	}
+
 	public BTNode getParent(){
 		return parent;
 	}
 	public ArrayList<Integer> getState(){
 		return state;
 	}
-	public void addChildren(BTNode b){
-		children.add(b);
-	}
-	public ArrayList<BTNode> getChildren(){
-		return children;
-	}
-	
+
 	public static void main(String args[]){
 		BTNode node = new BTNode(5);
 		System.out.println(node.getState().toString());
-		node.getPossibleMoves();
 
-		System.out.println(node.getMoves().toString());
+
 		
-		for(ArrayList<Integer> move: node.getMoves()){
-			BTNode b = new BTNode(move,node);
-			node.addChildren(b);
-		}
-		
-		for(BTNode c: node.getChildren()){
-			c.getPossibleMoves();
-			System.out.println(c.getMoves().toString());
-		}
 	}
 }
