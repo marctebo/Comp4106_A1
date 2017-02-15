@@ -59,6 +59,7 @@ public class BridgeAndTorch {
 	
 	public void printSuccessRoute(BTNode end){
 		ArrayList<ArrayList<Integer>> changed = new ArrayList<>();
+		
 		successTime = 0;
 		
 		while(end.getParent()!=null){
@@ -68,12 +69,17 @@ public class BridgeAndTorch {
 		}
 		for(ArrayList<Integer> i: changed){
 			//use max();
+			int val = 0;
 			System.out.print("Person(s) ");
 			for(Integer a: i){
 				if(a.intValue() != 0){
 					System.out.print(a + " ");
+					if(times[a.intValue()-1]>val){
+						val = times[a.intValue()-1];
+					}
 				}
 			}
+			successTime+=val;
 			System.out.println("crossed the bridge.");
 		}
 	}
@@ -107,7 +113,7 @@ public class BridgeAndTorch {
 		}
 		
 		setTimes(nums);
-		
+
 		BTNode f = bt.depthFirstSearch();
 		System.out.println("DFS");
 		bt.printSuccessRoute(f);
