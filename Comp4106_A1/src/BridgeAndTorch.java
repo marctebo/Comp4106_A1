@@ -5,7 +5,8 @@ public class BridgeAndTorch {
 	public BTNode start;
 	public static int[] times;
 	public int successTime;
-	
+	public int fastestPerson;
+
 	public BridgeAndTorch(int size){
 		start = new BTNode(size);
 		times = new int[size - 1];
@@ -43,6 +44,27 @@ public class BridgeAndTorch {
 		
 		return new BTNode(BTNode.goal,temp);
 		
+	}
+	
+	public BTNode aStarH1(){
+		Stack<BTNode> s = new Stack<BTNode>();
+		for(ArrayList<Integer> a: start.getMoves()){
+			s.push(new BTNode(a,start));
+		}
+		BTNode temp = s.pop();
+		while(!temp.getMoves().contains(BTNode.goal)){
+			if(BTNode.getChangedIndices(temp.getParent().getState(),temp.getState()).contains(fastestPerson+1)){
+				for(ArrayList<Integer> a: temp.getMoves()){
+					s.push(new BTNode(a,temp));
+				}
+			}
+			temp = s.pop();
+			while(temp.getMoves().contains(BTNode.goal) && !BTNode.getChangedIndices(temp.getParent().getState(),temp.getState()).contains(fastestPerson+1)){
+				temp = s.pop();
+			}
+		}
+		
+		return new BTNode(BTNode.goal,temp);
 	}
 	
 	public static ArrayList<BTNode> getSuccessRoute(BTNode end){
@@ -88,9 +110,29 @@ public class BridgeAndTorch {
 			times[i] = Integer.parseInt(input[i]);
 		}
 	}
+	
 	public int getSuccessTime(){
 		return successTime;
 	}
+	
+	public int getQuickest(){
+		int low = 0;
+		for(int i = 1; i< times.length;i++){
+			if(times[i]< times[low]){
+				low = i;
+			}
+		}
+		return low;
+		
+	}
+	
+	public int getFastestPerson() {
+		return fastestPerson;
+	}
+	public void setFastestPerson(int fastestPerson) {
+		this.fastestPerson = fastestPerson;
+	}
+	
 	public static void main(String[] args) {
 		System.out.println("Please enter the number of people (Minimum 3)");
 		Scanner scan = new Scanner(System.in);
@@ -113,14 +155,20 @@ public class BridgeAndTorch {
 		}
 		
 		setTimes(nums);
+		bt.setFastestPerson(bt.getQuickest());
 
+		System.out.println(bt.getFastestPerson());
 		BTNode f = bt.depthFirstSearch();
 		System.out.println("DFS");
 		bt.printSuccessRoute(f);
-		System.out.println("Success Time: " + bt.getSuccessTime());
+		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
 		BTNode g = bt.breadthFirstSearch();
 		System.out.println("BFS");
 		bt.printSuccessRoute(g);
-		System.out.println("Success Time: " + bt.getSuccessTime());
+		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		BTNode h = bt.aStarH1();
+		System.out.println("A*: Heuristic 1");
+		bt.printSuccessRoute(h);
+		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
 	}
 }
