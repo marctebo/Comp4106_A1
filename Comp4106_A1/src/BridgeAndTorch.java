@@ -67,6 +67,60 @@ public class BridgeAndTorch {
 		return new BTNode(BTNode.goal,temp);
 	}
 	
+	public BTNode aStarH2(){
+		Queue<BTNode> q = new ArrayDeque<BTNode>();
+		BTNode temp = new BTNode(BTNode.goal.size());
+		ArrayList<BTNode> hold = new ArrayList<>();
+		for(ArrayList<Integer> a: start.getMoves()){
+			q.add(new BTNode(a,start));
+		}
+		do{
+			while(!q.isEmpty()){
+				temp = q.remove();
+				hold.add(temp);
+			}
+			temp = hold.remove(getCheapestPath(hold));
+			while(!hold.isEmpty()){
+				q.add(hold.remove(0)); //potential problem
+			}
+			for(ArrayList<Integer> a: temp.getMoves()){
+				q.add(new BTNode(a,temp));
+			}
+		}
+		while(!temp.getMoves().contains(BTNode.goal));
+		
+		return new BTNode(BTNode.goal,temp);
+	}
+	
+	public BTNode aStarH3(){
+		Queue<BTNode> q = new ArrayDeque<BTNode>();
+		BTNode temp = new BTNode(BTNode.goal.size());
+		ArrayList<BTNode> hold = new ArrayList<>();
+		for(ArrayList<Integer> a: start.getMoves()){
+			q.add(new BTNode(a,start));
+		}
+		for(BTNode b: q){
+			if(!BTNode.getChangedIndices(b.getParent().getState(),b.getState()).contains(fastestPerson+1)){
+				q.remove(b);
+			}
+		}
+		do{
+			while(!q.isEmpty()){
+				temp = q.remove();
+				hold.add(temp);
+			}
+			temp = hold.remove(getCheapestPath(hold));
+			while(!hold.isEmpty()){
+				q.add(hold.remove(0)); //potential problem
+			}
+			for(ArrayList<Integer> a: temp.getMoves()){
+				q.add(new BTNode(a,temp));
+			}
+		}
+		while(!temp.getMoves().contains(BTNode.goal));
+		
+		return new BTNode(BTNode.goal,temp);
+	}
 	public static ArrayList<BTNode> getSuccessRoute(BTNode end){
 		BTNode temp = end;
 		ArrayList<BTNode> path = new ArrayList<BTNode>();
@@ -133,6 +187,41 @@ public class BridgeAndTorch {
 		this.fastestPerson = fastestPerson;
 	}
 	
+	public static int getCheapestPath(ArrayList<BTNode> hold){
+		int cheap = 0;
+		int temp = 0;
+		int index = 0;
+		for(BTNode b: hold){
+			temp = getDistance(b);
+			if (cheap == 0 || temp < cheap){
+				cheap = temp;
+				index = hold.indexOf(b);
+			}
+		}
+		return index;
+	}
+	public static int getDistance(BTNode node){
+		ArrayList<ArrayList<Integer>> changed = new ArrayList<>();
+		int curr = 0;
+		int time = 0;
+		while(node.getParent()!= null){
+			ArrayList<Integer> temp = BTNode.getChangedIndices(node.getState(), node.getParent().getState());
+			changed.add(0, temp);
+			node = node.getParent();
+		}
+		for(ArrayList<Integer>i: changed){
+			for(Integer a:i){
+				if(a.intValue() != 0){
+					if(times[a.intValue()-1]>curr){
+						curr = times[a.intValue()-1];
+					}
+				}
+			}
+			time+=curr;
+			curr = 0;
+		}
+		return time;
+	}
 	public static void main(String[] args) {
 		System.out.println("Please enter the number of people (Minimum 3)");
 		Scanner scan = new Scanner(System.in);
@@ -169,6 +258,14 @@ public class BridgeAndTorch {
 		BTNode h = bt.aStarH1();
 		System.out.println("A*: Heuristic 1");
 		bt.printSuccessRoute(h);
+		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		BTNode i = bt.aStarH2();
+		System.out.println("A*: Heuristic 2");
+		bt.printSuccessRoute(i);
+		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		BTNode j = bt.aStarH3();
+		System.out.println("A*: Heuristic 3");
+		bt.printSuccessRoute(j);
 		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
 	}
 }

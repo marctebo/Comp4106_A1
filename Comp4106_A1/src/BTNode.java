@@ -23,6 +23,7 @@ public class BTNode {
 	
 	public ArrayList<ArrayList<Integer>> getMoves(){
 		ArrayList<Integer> temp = new ArrayList<Integer>();
+		
 		temp.addAll(state);
 		moves = new ArrayList<ArrayList<Integer>>();
 		if (temp.get(0).intValue() == 0){
@@ -58,7 +59,7 @@ public class BTNode {
 	}
 	
 	public static boolean compareArrays(ArrayList<Integer> arr1, ArrayList<Integer> arr2){
-		if(arr1.size()!=arr2.size()) return false;
+		//if(arr1.size()!=arr2.size()) return false;
 
 		return arr1.equals(arr2);
 	}
