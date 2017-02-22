@@ -223,6 +223,7 @@ public class BridgeAndTorch {
 		return time;
 	}
 	public static void main(String[] args) {
+		long start, end;
 		System.out.println("Please enter the number of people (Minimum 3)");
 		Scanner scan = new Scanner(System.in);
 		String input = scan.nextLine();
@@ -245,27 +246,44 @@ public class BridgeAndTorch {
 		
 		setTimes(nums);
 		bt.setFastestPerson(bt.getQuickest());
-
-		System.out.println(bt.getFastestPerson());
+		start = System.currentTimeMillis();
 		BTNode f = bt.depthFirstSearch();
-		System.out.println("DFS");
+		end = System.currentTimeMillis();
+		System.out.println("\nDFS");
 		bt.printSuccessRoute(f);
-		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		System.out.println("Success Time: " + bt.getSuccessTime()+ " minutes");
+		System.out.println("Computation Time: " + (end-start)/1000.0 + " seconds\n");
+		
+		start = System.currentTimeMillis();
 		BTNode g = bt.breadthFirstSearch();
+		end = System.currentTimeMillis();
 		System.out.println("BFS");
 		bt.printSuccessRoute(g);
-		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		System.out.println("Success Time: " + bt.getSuccessTime()+ " minutes");
+		System.out.println("Computation Time: " + (end-start)/1000.0 + " seconds\n");
+		
+		start = System.currentTimeMillis();
 		BTNode h = bt.aStarH1();
+		end = System.currentTimeMillis();
 		System.out.println("A*: Heuristic 1");
 		bt.printSuccessRoute(h);
-		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		System.out.println("Success Time: " + bt.getSuccessTime()+ " minutes");
+		System.out.println("Computation Time: " + (end-start)/1000.0 + " seconds\n");
+		
+		start = System.currentTimeMillis();
 		BTNode i = bt.aStarH2();
+		end = System.currentTimeMillis();
 		System.out.println("A*: Heuristic 2");
 		bt.printSuccessRoute(i);
-		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		System.out.println("Success Time: " + bt.getSuccessTime()+ " minutes");
+		System.out.println("Computation Time: " + (end-start)/1000.0 + " seconds\n");
+		
+		start = System.currentTimeMillis();
 		BTNode j = bt.aStarH3();
+		end = System.currentTimeMillis();
 		System.out.println("A*: Heuristic 3");
 		bt.printSuccessRoute(j);
-		System.out.println("Success Time: " + bt.getSuccessTime()+ "\n");
+		System.out.println("Success Time: " + bt.getSuccessTime()+ " minutes");
+		System.out.println("Computation Time: " + (end-start)/1000.0 + " seconds\n");
 	}
 }
