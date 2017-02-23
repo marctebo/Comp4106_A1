@@ -7,7 +7,7 @@ public class SpaceManagement {
 	private SMNode start;
 	
 	public SpaceManagement(){
-		int[][] begin = {{1,5,3},{0,8,7},{4,6,2}};
+		int[][] begin = {{6,7,3},{5,0,2},{4,1,8}}; //6,7,3,5,0,2,4,1,8 3x3
 		start = new SMNode(begin,null);
 	}
 	public SMNode getStart(){
@@ -21,7 +21,9 @@ public class SpaceManagement {
 		SMNode temp = s.pop();
 		while(!temp.containsMove(SMNode.goal,temp.getMoves())){
 			for(int[][] a: temp.getMoves()){
-				s.push(new SMNode(a,temp));
+				if(a!=null){
+					s.push(new SMNode(a,temp));
+				}
 			}
 			temp = s.pop();
 		}
@@ -36,7 +38,9 @@ public class SpaceManagement {
 		SMNode temp = q.remove();
 		while(!temp.containsMove(SMNode.goal,temp.getMoves())){
 			for(int[][] a: temp.getMoves()){
-				q.add(new SMNode(a,temp));
+				if(a!=null){
+					q.add(new SMNode(a,temp));
+				}
 			}
 			temp = q.remove();
 		}
@@ -44,10 +48,7 @@ public class SpaceManagement {
 		return new SMNode(SMNode.goal,temp);
 		
 	}
-	public static void main(String args[]){
-		SpaceManagement sm = new SpaceManagement();
-		System.out.println("STARTING POSITION");
-		SMNode end = sm.breadthFirstSearch();
+	public void printSuccessRoute(SMNode end){
 		ArrayList<SMNode> path = new ArrayList<>();
 		path.add(0,end);
 		while(end.getParent()!=null){
@@ -58,5 +59,14 @@ public class SpaceManagement {
 			SMNode.printState(s.getState());
 			System.out.println();
 		}
+	}
+	public static void main(String args[]){
+		SpaceManagement sm = new SpaceManagement();
+		System.out.println("STARTING POSITION BFS");
+		SMNode end = sm.breadthFirstSearch();
+		sm.printSuccessRoute(end);
+		System.out.println("STARTING POSITION DFS");
+		end = sm.depthFirstSearch();
+		sm.printSuccessRoute(end);
 	}
 }

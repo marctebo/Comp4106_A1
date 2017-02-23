@@ -62,49 +62,65 @@ public class SMNode {
 						temp = copyState();
 						temp[i][j] = temp[i-1][j];
 						temp[i-1][j] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(i+1<xSize){
 						temp = copyState();
 						temp[i][j] = temp[i+1][j];
 						temp[i+1][j] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(j-1>=0){
 						temp = copyState();
 						temp[i][j] = temp[i][j-1];
 						temp[i][j-1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(j+1<ySize){
 						temp = copyState();
 						temp[i][j] = temp[i][j+1];
 						temp[i][j+1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(i-1>=0 && j-1>=0){
 						temp = copyState();
 						temp[i][j] = temp[i-1][j-1];
 						temp[i-1][j-1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(i-1>=0 && j+1<ySize){
 						temp = copyState();
 						temp[i][j] = temp[i-1][j+1];
 						temp[i-1][j+1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(i+1<xSize && j-1>=0){
 						temp = copyState();
 						temp[i][j] = temp[i+1][j-1];
 						temp[i+1][j-1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 					if(i+1<xSize && j+1<ySize){
 						temp = copyState();
 						temp[i][j] = temp[i+1][j+1];
 						temp[i+1][j+1] = 0;
-						moves.add(temp);
+						if(!containsMove(temp) && !checkMadeMoves(temp)){
+							moves.add(temp);
+						}
 					}
 				}
 			}
@@ -121,7 +137,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-2][j-1];
 					temp[i-2][j-1] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -130,7 +146,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-2][j+1];
 					temp[i-2][j+1] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -139,7 +155,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-1][j+2];
 					temp[i-1][j+2] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -148,7 +164,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+1][j+2];
 					temp[i+1][j+2] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -157,7 +173,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+2][j+1];
 					temp[i+2][j+1] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -166,7 +182,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+2][j-1];
 					temp[i+2][j-1] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -175,7 +191,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+1][j-2];
 					temp[i+1][j-2] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
@@ -184,7 +200,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-1][j-2];
 					temp[i-1][j-2] = hold;
-					if(!containsMove(temp)){
+					if(!containsMove(temp) && !checkMadeMoves(temp)){
 						moves.add(temp);
 					}
 				}
