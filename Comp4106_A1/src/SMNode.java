@@ -1,15 +1,21 @@
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 public class SMNode {
-	private int[][] state = {{1,2,3},{4,0,5},{6,7,8}};
+	private int[][] state;
+	private SMNode parent;
+
 	private static int xSize = 3;
 	private static int ySize = 3;
 	private ArrayList<int[][]> moves;
 	public static int[][] goal;
 	
-	public SMNode(){
+	public SMNode(int[][] state,SMNode parent){
+		this.state = state;
+		this.parent = parent;
 		goal = new int[xSize][ySize];
+		generateGoal();
 	}
 	public void generateGoal(){
 		int x = 0;
@@ -115,7 +121,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-2][j-1];
 					temp[i-2][j-1] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -124,7 +130,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-2][j+1];
 					temp[i-2][j+1] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -133,7 +139,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i-1][j+2];
 					temp[i-1][j+2] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -142,7 +148,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+1][j+2];
 					temp[i+1][j+2] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -151,7 +157,7 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+2][j+1];
 					temp[i+2][j+1] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -160,25 +166,25 @@ public class SMNode {
 					hold = temp[i][j];
 					temp[i][j] = temp[i+2][j-1];
 					temp[i+2][j-1] = hold;
-					if(!moves.contains(temp)){
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
-				if(i-2>=0 && j+1<ySize){
+				if(i+1<xSize && j-2 >=0){
 					temp = copyState();
 					hold = temp[i][j];
-					temp[i][j] = temp[i-2][j+1];
-					temp[i-2][j+1] = hold;
-					if(!moves.contains(temp)){
+					temp[i][j] = temp[i+1][j-2];
+					temp[i+1][j-2] = hold;
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
-				if(i-2>=0 && j-1>=0){
+				if(i-1>=0 && j-2>=0){
 					temp = copyState();
 					hold = temp[i][j];
-					temp[i][j] = temp[i-2][j-1];
-					temp[i-2][j-1] = hold;
-					if(!moves.contains(temp)){
+					temp[i][j] = temp[i-1][j-2];
+					temp[i-1][j-2] = hold;
+					if(!containsMove(temp)){
 						moves.add(temp);
 					}
 				}
@@ -209,26 +215,68 @@ public class SMNode {
 	}
 	public ArrayList<int[][]> getMoves(){
 		moves = new ArrayList<int[][]>();
-		//getStandardMoves();
+		getStandardMoves();
 		getHorseMoves();
 		return moves;
 		
 	}
-	public void containsMove(int[][] move){
+	public boolean containsMove(int[][] move){
 		for(int[][] m: moves){
-			for(int i = 0; i< xSize;i++){
-				for(int j = 0; j< ySize;j++){
-					
-				}
+			if(Arrays.deepEquals(move,m)){
+				return true;
 			}
 		}
+		return false;
+	}
+	public boolean containsMove(int[][] move,ArrayList<int[][]>moves){
+		for(int[][] m: moves){
+			if(Arrays.deepEquals(move,m)){
+				return true;
+			}
+		}
+		return false;
+	}
+	public boolean checkMadeMoves(int[][] move){
+		ArrayList<int[][]> allMoves = new ArrayList<>();
+		SMNode temp = new SMNode(this.getState(),this.getParent());
+		while(temp.getParent()!=null){
+			allMoves.add(temp.getParent().getState());
+			temp = temp.getParent();
+		}
+		return containsMove(move,allMoves);
+	}
+	public int[][] getState() {
+		return state;
+	}
+	public void setState(int[][] state) {
+		this.state = state;
+	}
+	public SMNode getParent() {
+		return parent;
+	}
+	public void setParent(SMNode parent) {
+		this.parent = parent;
 	}
 	public static void main(String args[]){
-		SMNode s = new SMNode();
-		s.generateGoal();
-	    for(int[][] a: s.getMoves()){
-	    	printState(a);
-	    	System.out.println();
-	    }
+		int[][] check1 = {{1,2,3},{4,0,5},{6,7,8}};
+		int[][] check2 = {{1,2,4},{3,0,5},{6,7,8}};
+		int[][] check3 = {{1,2,4},{0,3,5},{6,7,8}};
+		ArrayList<int[][]> allMoves = new ArrayList<>();
+		allMoves.add(check1);
+		allMoves.add(check2);
+		allMoves.add(check3);
+
+		int[][] test = {{1,2,4},{3,0,5},{6,7,8}};
+		SMNode s = new SMNode(check1,null);
+		SMNode t = new SMNode(check2,s);
+		SMNode u = new SMNode(check3,t);
+		System.out.println(u.checkMadeMoves(test));
+		//s.generateGoal();
+	    //for(int[][] a: s.getMoves()){
+	    //	printState(a);
+	    //	System.out.println();
+	    //}
+	    //int[][] check = {{1,2,4},{3,0,5},{6,7,8}};
+	    //System.out.println(s.getMoves().size());
 	}
 }
