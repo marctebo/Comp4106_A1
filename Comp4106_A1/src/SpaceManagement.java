@@ -1,15 +1,62 @@
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Queue;
+import java.util.Scanner;
 import java.util.Stack;
 
 public class SpaceManagement {
 	private SMNode start;
+	public static int xSize;
+	public static int ySize;
 	
-	public SpaceManagement(){
-		//int[][] begin = {{6,7,3},{5,0,2},{4,1,8}}; //6,7,3,5,0,2,4,1,8 3x3
-		int[][] begin = {{8,4,2},{3,1,7},{6,5,0}};
-		start = new SMNode(begin,null);
+	private int[][] begin3x3 = {{6,7,3},{5,0,2},{4,1,8}}; //works for dfs and bfs
+	//private int[][] begin3x3 = {{8,4,2},{3,1,7},{6,5,0}};
+	private int[][] begin2x4 = {{0,2,4,6},{7,1,3,5}};
+	private int[][] begin2x5 = {{0,2,4,6,8},{7,1,3,9,5}};
+	public SpaceManagement(int xSize, int ySize){
+		this.xSize = xSize;
+		this.ySize = ySize;
+		if(xSize == 3 && ySize == 3){
+			start = new SMNode(begin3x3,null);
+		}
+		else if(xSize == 2 && ySize == 4){
+			start = new SMNode(begin2x4,null);
+		}
+		else if(xSize ==2 && ySize == 5){
+			start = new SMNode(begin2x5,null);
+		}
+	}
+	public void setStart(Scanner scan){
+		do{
+			for (int i=0;i<xSize;i++){
+				System.out.println("Please enter the values for row: " + (i+1) + ". Requires " + ySize + " entries. Separate each by a space.");
+				String[] input = scan.nextLine().split(" ");
+				for(int j = 0; j<ySize;j++){
+					start.getState()[i][j] = Integer.parseInt(input[j]);
+				}
+			}
+		}
+		while(!checkValidStart());
+	}
+	public boolean checkValidStart(){
+		ArrayList<Integer> numbers = new ArrayList<>();
+		for(int i = 0; i<xSize;i++){
+			for(int j=0;j<ySize;j++){
+				if(numbers.contains(start.getState()[i][j])){
+					return false;
+				}
+				else{
+					numbers.add(start.getState()[i][j]);
+				}
+			}
+		}
+		if(numbers.size()<xSize*ySize){
+			return false;
+		}
+		if(!numbers.contains(0)){
+			return false;
+		}
+		return true;
 	}
 	public SMNode getStart(){
 		return start;
@@ -210,9 +257,35 @@ public class SpaceManagement {
 			System.out.println();
 		}
 	}
+	public static int getxSize() {
+		return xSize;
+	}
+	public static void setxSize(int xSize) {
+		SpaceManagement.xSize = xSize;
+	}
+	public static int getySize() {
+		return ySize;
+	}
+	public static void setySize(int ySize) {
+		SpaceManagement.ySize = ySize;
+	}
 	public static void main(String args[]){
 		long start, end;
-		SpaceManagement sm = new SpaceManagement();
+		System.out.println("Please enter the dimensions separated by a space (Options: 3 3, 2 4, 2 5) ");
+		Scanner scan = new Scanner(System.in);
+		String input = scan.nextLine();
+		String[] nums = input.split(" ");
+		
+		while(nums.length!= 2){
+			System.out.println("Make sure there are only 2 dimensions");
+			input = scan.nextLine();
+			nums = input.split(" ");
+		}
+		SpaceManagement sm = new SpaceManagement(Integer.parseInt(nums[0]),Integer.parseInt(nums[1]));
+		System.out.println("Do you wish to enter your own dimensions? (y/n)");
+		if(scan.nextLine().equals("y")){
+			sm.setStart(scan);
+		}
 		
 		System.out.println("STARTING POSITION A*: HEURISTIC 1");
 		start = System.currentTimeMillis();

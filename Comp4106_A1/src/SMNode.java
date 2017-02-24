@@ -6,8 +6,8 @@ public class SMNode {
 	private int[][] state;
 	private SMNode parent;
 
-	private static int xSize = 3;
-	private static int ySize = 3;
+	private static int xSize = SpaceManagement.xSize;
+	private static int ySize = SpaceManagement.ySize;
 	private ArrayList<int[][]> moves;
 	public static int[][] goal;
 	
