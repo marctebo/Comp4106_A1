@@ -261,6 +261,60 @@ public class SMNode {
 		}
 		return containsMove(move,allMoves);
 	}
+	
+	public static int countIncorrect(int[][] move){
+		int count = 0;
+		for (int i = 0; i<xSize;i++){
+			for(int j = 0; j< ySize; j++){
+				if(move[i][j]!=0 && move[i][j] != goal[i][j]){
+					count++;
+				}
+			}
+		}
+		return count;
+	}
+	public static int getXPosition(int val){
+		int num = -1;
+		for (int i = 0; i<xSize;i++){
+			for(int j = 0; j< ySize; j++){
+				if(goal[i][j] == val){
+					num = i;
+					break;
+				}
+			}
+			if(num!=-1){
+				break;
+			}
+		}	
+		return num;
+	}
+	public static int getYPosition(int val){
+		int num = -1;
+		for (int i = 0; i<xSize;i++){
+			for(int j = 0; j< ySize; j++){
+				if(goal[i][j] == val){
+					num = j;
+					break;
+				}
+			}
+			if(num!=-1){
+				break;
+			}
+		}	
+		return num;
+	}
+	public static int getTotalDistance(int[][] move){
+		int count = 0;
+		for (int i = 0; i<xSize;i++){
+			for(int j = 0; j< ySize; j++){
+				if(move[i][j]!=0 && move[i][j] != goal[i][j]){
+					count+= Math.abs(i-getXPosition(move[i][j]));
+					count+= Math.abs(j-getYPosition(move[i][j]));
+				}
+			}
+		}
+		return count;
+	}
 	public int[][] getState() {
 		return state;
 	}
@@ -273,8 +327,17 @@ public class SMNode {
 	public void setParent(SMNode parent) {
 		this.parent = parent;
 	}
+	public static int getNumberOfMoves(SMNode sol){
+		int count = 0;
+		SMNode temp = new SMNode(sol.getState(),sol.getParent());
+		while(temp.getParent()!=null){
+			count++;
+			temp = temp.getParent();
+		}
+		return count;
+	}
 	public static void main(String args[]){
-		int[][] check1 = {{1,2,3},{4,0,5},{6,7,8}};
+		int[][] check1 = {{1,2,3},{8,0,4},{7,6,5}};
 		int[][] check2 = {{1,2,4},{3,0,5},{6,7,8}};
 		int[][] check3 = {{1,2,4},{0,3,5},{6,7,8}};
 		ArrayList<int[][]> allMoves = new ArrayList<>();
@@ -282,11 +345,11 @@ public class SMNode {
 		allMoves.add(check2);
 		allMoves.add(check3);
 
-		int[][] test = {{1,2,4},{3,0,5},{6,7,8}};
+		int[][] test = {{1,2,4},{5,0,3},{7,6,8}};
 		SMNode s = new SMNode(check1,null);
 		SMNode t = new SMNode(check2,s);
 		SMNode u = new SMNode(check3,t);
-		System.out.println(u.checkMadeMoves(test));
+		System.out.println(getTotalDistance(test));
 		//s.generateGoal();
 	    //for(int[][] a: s.getMoves()){
 	    //	printState(a);
