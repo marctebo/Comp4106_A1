@@ -12,7 +12,7 @@ public class SpaceManagement {
 	private int[][] begin3x3 = {{6,7,3},{5,0,2},{4,1,8}}; //works for dfs and bfs
 	//private int[][] begin3x3 = {{8,4,2},{3,1,7},{6,5,0}};
 	private int[][] begin2x4 = {{0,2,4,6},{7,1,3,5}};
-	private int[][] begin2x5 = {{0,2,4,6,8},{7,1,3,9,5}};
+	private int[][] begin2x5 = {{1,0,3,6,8},{7,4,5,2,9}};
 	public SpaceManagement(int xSize, int ySize){
 		this.xSize = xSize;
 		this.ySize = ySize;
